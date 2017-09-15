@@ -18,11 +18,15 @@ export default (props) => (
           className="title"
         >Explore</p> : null
       }
-      <FilterBar
-        filter={props.gPets.sort}
-        sortAction={sortGlobalPetsAction}
-        searchBar={true}
-      />
+      {console.log(props)}
+      {
+        props.location.pathname.split('/')[2] === 'mapview' ? null :
+        <FilterBar
+          filter={props.gPets.sort}
+          sortAction={sortGlobalPetsAction}
+          searchBar={true}
+        />
+      }
       <div
         style={{
           display: 'flex',
