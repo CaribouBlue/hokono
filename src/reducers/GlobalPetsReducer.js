@@ -11,13 +11,15 @@ export default (state = {}, action) => {
     case 'SORT_GLOBAL_PETS' :
       return petsSort(state, action.sortType, action.lToG, action.searchTerm);
     case 'STARRED_A_PET' :
-      const nextState = {...state, ...action.dataPet};
+      const nextState = {...state, ...action.petData};
       return nextState;
     case 'UNSTARRED_A_PET' :
       return {...state, ...action.dataPet};
     case 'UPDATE_POSTS' :
-      if(!state[action.petId].posts) {
-        state[action.petId].posts = {};
+      if(!state[action.petId] || !state[action.petId].posts) {
+        state[action.petId] = {
+          posts: {}
+        };
       }
       state[action.petId].posts = { ...state[action.petId].posts, ...action.payload };
       return state;

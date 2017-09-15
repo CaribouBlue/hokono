@@ -31,6 +31,7 @@ export default (state = { got: false }, action) => {
       }
       return state;
     case 'UPDATE_POSTS' :
+      if (!state.pets[action.petId]) state.pets[action.petId] = {};
       state.pets[action.petId].posts = { ...state.pets[action.petId].posts, ...action.payload };
       return state;
     case 'LIKE_POST' :

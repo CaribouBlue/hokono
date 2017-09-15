@@ -1,8 +1,7 @@
 import firebase from '../firebase/index';
 import store from '../store';
 
-export const userFollowedPet = (dataFromPet) => {
-  const pet = { ...dataFromPet };
+export const userFollowedPet = (pet) => {
   const action = {
     type: 'FOLLOW_A_PET'
   };
@@ -39,8 +38,7 @@ export const userFollowedPet = (dataFromPet) => {
     });
 }
 
-export const userUnfollowedPet = (dataFromPet) => {
-  const pet = { ...dataFromPet };
+export const userUnfollowedPet = (pet) => {
   const action = {
     type: 'UNFOLLOW_A_PET'
   };
@@ -72,8 +70,7 @@ export const userUnfollowedPet = (dataFromPet) => {
   });
 }
 
-export const userStarredPet = (petData) => {
-  const pet = { ...petData };
+export const userStarredPet = (pet) => {
   const action = {
     type: 'STARRED_A_PET'
   };
@@ -96,18 +93,17 @@ export const userStarredPet = (petData) => {
 
   firebase.database().ref().update(updates).then(() => {
     //updates the users stars in state/store
+    action.data = {
+      [pet.id]: {
+        displayName: user.displayName
+      }
+    };
     pet.stars = pet.stars + 1 || 1;
     pet.starredBy = {
       ...pet.starredBy,
       [user.uid]: {
         displayName: user.displayName,
         createdAt: currTime,
-      }
-    };
-    action.data = {
-      [pet.id]: {
-        displayName: user.displayName,
-        ...pet,
       }
     };
 
@@ -123,8 +119,7 @@ export const userStarredPet = (petData) => {
   });
 }
 
-export const userUnstarredPet = (dataFromPets) => {
-  const pet ={ ...dataFromPets };
+export const userUnstarredPet = (pet) => {
   const action = {
     type: 'UNSTARRED_A_PET'
   };
@@ -151,9 +146,11 @@ export const userUnstarredPet = (dataFromPets) => {
     const emptyObj = {};
     emptyObj[user.uid] = null;
     pet.starredBy = emptyObj;
+    const emptyObj2 = {};
+    emptyObj2[pet.id] = pet;
 
     //updates a pets unstars in state/store
-    action.dataPet = { [pet.id]: pet };
+    action.dataPet = { emptyObj2 };
     action.payload = "success";
     store.dispatch(action);
   }, (err) => {
